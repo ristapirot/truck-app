@@ -1,28 +1,248 @@
 <template>
-  <div id="app">
-    <img src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+  <v-app id="inspire">
+    <v-navigation-drawer
+      :clipped="$vuetify.breakpoint.lgAndUp"
+      v-model="drawer"
+      fixed
+      app
+    >
+      <v-list dense>
+        <template v-for="item in items">
+          <v-layout
+            v-if="item.heading"
+            :key="item.heading"
+            row
+            align-center
+          >
+            <v-flex xs6>
+              <v-subheader v-if="item.heading">
+                {{ item.heading }}
+              </v-subheader>
+            </v-flex>
+            <v-flex xs6 class="text-xs-center">
+              <a href="#!" class="body-2 black--text">EDIT</a>
+            </v-flex>
+          </v-layout>
+          <v-list-group
+            v-else-if="item.children"
+            v-model="item.model"
+            :key="item.text"
+            :prepend-icon="item.model ? item.icon : item['icon-alt']"
+            append-icon=""
+          >
+            <v-list-tile slot="activator">
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  {{ item.text }}
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+            <v-list-tile
+              v-for="(child, i) in item.children"
+              :key="i"
+              @click=""
+            >
+              <v-list-tile-action v-if="child.icon">
+                <v-icon>{{ child.icon }}</v-icon>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  {{ child.text }}
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+          </v-list-group>
+          <v-list-tile :to="item.link" v-else :key="item.text" @click="">
+            <v-list-tile-action>
+              <v-icon>{{ item.icon }}</v-icon>
+            </v-list-tile-action>
+            <v-list-tile-content>
+              <v-list-tile-title>
+                {{ item.text }}
+              </v-list-tile-title>
+            </v-list-tile-content>
+          </v-list-tile>
+        </template>
+      </v-list>
+    </v-navigation-drawer>
+    <v-toolbar
+      :clipped-left="$vuetify.breakpoint.lgAndUp"
+      color="blue darken-3"
+      dark
+      app
+      fixed
+    >
+      <v-toolbar-title style="width: 300px" class="ml-0 pl-3">
+        <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
+        <span class="hidden-sm-and-down">Truck App</span>
+      </v-toolbar-title>
+      <v-text-field
+        flat
+        solo-inverted
+        hide-details
+        prepend-inner-icon="search"
+        label="Search"
+        class="hidden-sm-and-down"
+      ></v-text-field>
+      <v-spacer></v-spacer>
+      <v-btn icon>
+        <v-icon>apps</v-icon>
+      </v-btn>
+      <v-btn icon>
+        <v-icon>notifications</v-icon>
+      </v-btn>
+      <v-btn icon large>
+        <v-avatar size="32px" tile>
+          <img
+            src="https://cdn.vuetifyjs.com/images/logos/logo.svg"
+            alt="Vuetify"
+          >
+        </v-avatar>
+      </v-btn>
+    </v-toolbar>
+    <v-content>
+        <router-view></router-view>
+    </v-content>
+    <v-btn
+      fab
+      bottom
+      right
+      color="pink"
+      dark
+      fixed
+      @click.stop="dialog = !dialog"
+    >
+      <v-icon>add</v-icon>
+    </v-btn>
+    <v-dialog v-model="dialog" width="800px">
+      <v-card>
+        <v-card-title
+          class="grey lighten-4 py-4 title"
+        >
+          Create fleet
+        </v-card-title>
+        <v-container grid-list-sm class="pa-4">
+          <v-layout row wrap>
+            <v-flex xs12 align-center justify-space-between>
+              <v-layout align-center>
+                <v-avatar size="40px" class="mr-3">
+                  <img
+                    src="//ssl.gstatic.com/s2/oz/images/sge/grey_silhouette.png"
+                    alt=""
+                  >
+                </v-avatar>
+                <v-text-field
+                  placeholder="Vozilo"
+                ></v-text-field>
+              </v-layout>
+            </v-flex>
+            <v-flex xs6>
+              <v-text-field
+                prepend-icon="business"
+                placeholder="Firma"
+              ></v-text-field>
+            </v-flex>
+            <v-flex xs6>
+              <v-text-field
+                prepend-icon="euro_symbol"
+                placeholder="Cena"
+              ></v-text-field>
+            </v-flex>
+            <v-flex xs6>
+              <v-text-field
+                prepend-icon="location_on"
+                placeholder="Mesto utovara"
+              ></v-text-field>
+            </v-flex>
+            <v-flex xs6>
+              <v-text-field
+                prepend-icon="location_off"
+                placeholder="Mesto istovara"
+              ></v-text-field>
+            </v-flex>
+            <v-flex xs6>
+              <v-text-field
+                prepend-icon="date_range"
+                placeholder="Datum utovara"
+              ></v-text-field>
+            </v-flex>
+            <v-flex xs6>
+              <v-text-field
+                prepend-icon="date_range"
+                placeholder="Datum istovara"
+              ></v-text-field>
+            </v-flex>
+            <v-flex xs12 align-center justify-space-between>
+              <v-layout align-center>
+                <v-avatar size="40px" class="mr-3">
+                  <img
+                    src="//ssl.gstatic.com/s2/oz/images/sge/grey_silhouette.png"
+                    alt=""
+                  >
+                </v-avatar>
+                <v-text-field
+                  placeholder="Vozac"
+                ></v-text-field>
+              </v-layout>
+            </v-flex>
+          </v-layout>
+        </v-container>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn flat color="primary" @click="dialog = false">Cancel</v-btn>
+          <v-btn flat @click="dialog = false">Save</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+  </v-app>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+  import Home from './components/Home.vue'
 
-export default {
-  name: 'app',
-  components: {
-    HelloWorld
+  export default {
+    data: () => ({
+      dialog: false,
+      drawer: null,
+      items: [
+        {
+          icon: 'keyboard_arrow_up',
+          'icon-alt': 'keyboard_arrow_down',
+          text: 'Vehicles',
+          link: '/vehicles',
+          model: false,
+          children: [
+            { text: 'Trucks', icon: 'local_shipping'  }
+          ]
+        },
+        { icon: 'contacts', text: 'Employees', link: '/employees' },
+        { icon: 'add_location', text: 'Fleets', link: '/fleets' },
+        { icon: 'content_copy', text: 'Invoices', link: 'Invoices' },
+        {
+          icon: 'keyboard_arrow_up',
+          'icon-alt': 'keyboard_arrow_down',
+          text: 'More',
+          model: false,
+          children: [
+            { text: 'Import' },
+            { text: 'Export' },
+            { text: 'Print' },
+            { text: 'Undo changes' },
+            { text: 'Other contacts' }
+          ]
+        },
+        { icon: 'settings', text: 'Settings' }
+      ]
+    }),
+    components: {
+      Home
+    },
+    props: {
+      source: String
+    }
   }
-}
 </script>
 
-<style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+<style scoped>
+
 </style>
