@@ -40,6 +40,7 @@
             <v-list-tile
               v-for="(child, i) in item.children"
               :key="i"
+              :to="child.link"
               @click=""
             >
               <v-list-tile-action v-if="child.icon">
@@ -209,10 +210,10 @@
           icon: 'keyboard_arrow_up',
           'icon-alt': 'keyboard_arrow_down',
           text: 'Vehicles',
-          link: '/vehicles',
           model: false,
           children: [
-            { text: 'Trucks', icon: 'local_shipping'  }
+            { text: 'Trucks', icon: 'local_shipping', link: '/trucks'  },
+            { text: 'Trailers', icon: 'commute', link: '/trailers'  }
           ]
         },
         { icon: 'contacts', text: 'Employees', link: '/employees' },
