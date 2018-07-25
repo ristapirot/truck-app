@@ -116,6 +116,11 @@
         justify-content: space-between
     }
 
+    h2 {
+        text-align: center;
+        margin: 2% auto;
+    }
+
     .fleet-btn {
         display: flex;
         flex-direction: column;
