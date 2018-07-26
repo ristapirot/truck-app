@@ -87,6 +87,11 @@
       ></v-text-field>
       <v-spacer></v-spacer>
       <v-btn icon>
+        <a href="https://gps.skywatch.bg/login/start" target="_blank">
+          <v-icon>location_on</v-icon>
+        </a>
+      </v-btn>
+      <v-btn icon>
         <v-icon>apps</v-icon>
       </v-btn>
       <v-btn icon>
@@ -134,7 +139,13 @@
                 </v-avatar>
                 <v-select
                   :items="getTrucks.map(truck => {
-                      return truck.plate
+                      return {text: truck.plate, value: {
+                        plate: truck.plate,
+                        make: truck.make,
+                        model: truck.model,
+                        vin: truck.vin,
+                        date: truck.date
+                      }}
                     })"
                   v-model="fleet.truck"
                   label="Trucks"
@@ -227,7 +238,16 @@
                   >
                 </v-avatar>
                 <v-select
-                  :items="getDrivers"
+                  :items="getDrivers.filter(driv => driv.workplace == 'Driver').map(driv => {
+                    return {text: driv.name + ' ' + driv.surname, value: {
+                      name: driv.name,
+                      surname: driv.surname,
+                      personId: driv.personId,
+                      telephone: driv.telephone,
+                      card: driv.card,
+                      active: driv.active
+                    }}  
+                  })"
                   label="Select driver"
                   v-model="fleet.driver"
                   required
@@ -259,10 +279,10 @@
       fleet: {
         start: '',
         end: '',
-        truck: '',
-        driver: '',
+        truck: {},
+        driver: {},
         startDate: null,
-        endDate: null,
+        endDate: '',
         company: ''
       },
       items: [
@@ -278,7 +298,7 @@
         },
         { icon: 'contacts', text: 'Employees', link: '/employees' },
         { icon: 'add_location', text: 'Fleets', link: '/fleets' },
-        { icon: 'content_copy', text: 'Invoices', link: 'Invoices' },
+        { icon: 'content_copy', text: 'Invoices', link: '/invoices' },
         {
           icon: 'keyboard_arrow_up',
           'icon-alt': 'keyboard_arrow_down',
@@ -303,18 +323,22 @@
       this.$store.dispatch('initTrailers')
       this.$store.dispatch('initEmployees')
       this.$store.dispatch('initFleets')
+      this.$store.dispatch('initInvoices')
     },
     methods: {
       clearFleet() {
         this.fleet.start = '',
         this.fleet.end = '',
-        this.fleet.truck = '',
-        this.fleet.driver = '',
-        this.fleet.startDate = '',
+        this.fleet.truck = {},
+        this.fleet.driver = {},
+        this.fleet.startDate = null,
         this.fleet.endDate = '',
         this.fleet.company = ''
       },
       addFleet() {
+        if (this.isOngoing) {
+          this.fleet.endDate = 'Ongoing'
+        }
         this.$store.dispatch('addFleets', this.fleet)
         this.dialog = false
         this.clearFleet()
@@ -325,14 +349,15 @@
         return this.$store.getters.trucks
       },
       getDrivers() {
-        return this.$store.getters.employees.map(emp => {
-          if (emp.workplace == 'Driver') return emp.name + ' ' + emp.surname
-        })
+        return this.$store.getters.employees
       }
     }
   }
 </script>
 
 <style scoped>
-
+  a {
+    text-decoration: none;
+    color: #fff
+  }
 </style>

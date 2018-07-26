@@ -9,8 +9,8 @@
             <template slot="items" slot-scope="props">
             <td>{{ props.item.start }}</td>
             <td class="text-xs-right">{{ props.item.end }}</td>
-            <td class="text-xs-right">{{ props.item.truck }}</td>
-            <td class="text-xs-right">{{ props.item.driver }}</td>
+            <td class="text-xs-right">{{ props.item.truck.plate }}</td>
+            <td class="text-xs-right">{{ props.item.driver.name }} {{ props.item.driver.surname }}</td>
             <td class="text-xs-right">{{ props.item.startDate }}</td>
             <td class="text-xs-right">{{ props.item.endDate }}</td>
             <td class="text-xs-right">{{ props.item.company }}</td>

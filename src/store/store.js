@@ -4,6 +4,7 @@ import trucks from './modules/trucks'
 import trailers from './modules/trailers'
 import employees from './modules/employees'
 import fleets from './modules/fleets'
+import invoices from './modules/invoices'
 
 Vue.use(Vuex)
 
@@ -12,6 +13,7 @@ export default new Vuex.Store({
         trucks,
         trailers,
         employees,
-        fleets
+        fleets,
+        invoices
     }
 })
