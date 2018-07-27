@@ -27,8 +27,10 @@ const mutations = {
                 active: active
             })
         }
+    },
+    'DELETE_EMPLOYEES' (state, employee) {
+        state.employees.splice(state.employees.indexOf(state.employees.find(element => element.plate == employee.plate)), 1)
     }
-
 }
 
 const actions = {
@@ -37,6 +39,9 @@ const actions = {
     },
     addEmployee: ({commit}, employee) => {
         commit('ADD_EMPLOYEES', employee)
+    },
+    deleteEmployee: ({commit}, employee) => {
+        
     }
 }
 

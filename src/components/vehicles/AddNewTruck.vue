@@ -5,6 +5,7 @@
             <v-text-field
                 v-model="truck.plate"
                 label="Licence plate"
+                class="truckLabel"
                 required
             ></v-text-field>
             <v-text-field
@@ -45,7 +46,7 @@
                     make: '',
                     model: '',
                     vin: '',
-                    date: ''
+                    date: null
                 }
             }
         },
@@ -55,7 +56,7 @@
                 this.truck.make = '' 
                 this.truck.model = ''
                 this.truck.vin = ''
-                this.truck.date = ''
+                this.truck.date = null
             },
             addTruck() {
                 this.$store.dispatch('addTruck', this.truck)

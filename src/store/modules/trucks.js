@@ -24,6 +24,9 @@ const mutations = {
                 date: date
             })
         }
+    },
+    'DELETE_TRUCKS' (state, truck) {
+        state.trucks.splice(state.trucks.indexOf(state.trucks.find(element => element.plate == truck.plate)), 1)
     }
 }
 
@@ -33,7 +36,10 @@ const actions = {
     },
     addTruck: ({commit}, truck) => {
         commit('ADD_TRUCKS', truck)
-    } 
+    },
+    deleteTruck: ({ commit }, truck) => {
+        commit('DELETE_TRUCKS', truck)
+    }
 }
 
 const getters = {

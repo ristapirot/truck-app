@@ -24,8 +24,10 @@ const mutations = {
                 date: date
             })
         }
+    },
+    'DELETE_TRAILERS' (state, trailer) {
+        state.trailers.splice(state.trailers.indexOf(state.trailers.find(element => element.plate == trailer.plate)), 1)
     }
-
 }
 
 const actions = {
@@ -34,6 +36,9 @@ const actions = {
     },
     addTrailer: ({commit}, trailer) => {
         commit('ADD_TRAILERS', trailer)
+    },
+    deleteTrailer: ({ commit }, trailer) => {
+        commit('DELETE_TRAILERS', trailer)
     }
 }
 
