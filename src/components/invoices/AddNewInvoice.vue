@@ -45,16 +45,18 @@
             <v-flex class="fleets-select" xs12 sm12 d-flex>
                 <v-select
                 :items="fleets.map(fl => {
-                    return {text: fl.start + ' - ' + fl.end + ' (' + fl.truck.plate + ')' + ' (' + fl.startDate + ' )' , value: {
-                        start: fl.start,
-                        end: fl.end,
-                        truck: fl.truck,
-                        driver: fl.driver,
-                        startDate: fl.startDate,
-                        endDate: fl.endDate,
-                        company: fl.company
-                    }}
-                }).filter(el => invoices.find(element => element.fleet == el))"
+                    if (checkFleet(fl) == undefined) {
+                        return {text: fl.start + ' - ' + fl.end + ' (' + fl.truck.plate + ')' + ' (' + fl.startDate + ' )' , value: {
+                            start: fl.start,
+                            end: fl.end,
+                            truck: fl.truck,
+                            driver: fl.driver,
+                            startDate: fl.startDate,
+                            endDate: fl.endDate,
+                            company: fl.company
+                        }}
+                    }
+                }).filter(element =>  element != undefined)"
                 box
                 label="Choose fleet"
                 v-model="invoice.fleet"
@@ -96,6 +98,10 @@
             addInvoice() {
                 this.$store.dispatch('addInvoice', this.invoice)
                 this.clear()
+            },
+            checkFleet(fleet) {
+                //console.log(this.invoices.map(element => element.fleet).find(element => element.start == fleet.start && element.end == fleet.end && element.startDate == fleet.startDate && element.endDate == fleet.endDate))
+                return this.invoices.map(element => element.fleet).find(element => element.start == fleet.start && element.end == fleet.end && element.startDate == fleet.startDate && element.endDate == fleet.endDate)
             }
         },
         computed: {
