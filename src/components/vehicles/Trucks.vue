@@ -1,5 +1,6 @@
 <template>
     <div>
+        <Header />
         <v-data-table
             :headers="headers"
             :items="trucks"
@@ -67,11 +68,15 @@
             </v-card>
             </v-dialog>
         <AddNewVehicle />
+        <ButtonAdd />
     </div>
 </template>
 
 <script>
     import AddNewVehicle from './AddNewTruck.vue'
+    import AuthenticationService from '../../services/AuthenticationService'
+    import Header from '../Header.vue'
+    import ButtonAdd from '../ButtonAdd.vue'
 
     export default {
         data() {
@@ -85,6 +90,7 @@
                     vin: '',
                     date: null
                 },
+                truckList: [],
                 headers: [
                     {
                         text: 'Number Plate',
@@ -116,10 +122,34 @@
             deleteTruck() {
                 this.$store.dispatch('deleteTruck', this.truck)
                 this.dialog = false;
+            },
+            getTruckToLocal(truck) {
+                this.truckList.push(truck)
+                this.convertDate()
+            },
+            getTrucks() {
+                AuthenticationService.getTrucks()
+                    .then(response => {
+                        response.data.forEach(el => this.getTruckToLocal(el))
+                    })
+                    .catch(err => {
+                        this.$router.push({name: 'Login'})
+                    })
+            },
+            convertDate() {
+                this.truckList.forEach(el => el.date = el.date.substr(0, 10))
             }
         },
         components: {
-            AddNewVehicle
+            AddNewVehicle,
+            Header,
+            ButtonAdd
+        },
+        mounted() {
+            if (!(localStorage.getItem('token') && localStorage.getItem('isLogged'))) {
+                this.$router.push({name: 'Login'})
+            }
+            this.getTrucks()
         },
         computed: {
             trucks() {

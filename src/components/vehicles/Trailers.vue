@@ -1,8 +1,9 @@
 <template>
     <div>
+        <Header />
         <v-data-table
             :headers="headers"
-            :items="trailers"
+            :items="trailerList"
             hide-actions
             class="elevation-1"
         >
@@ -67,17 +68,22 @@
             </v-card>
             </v-dialog>
         <AddNewVehicle />
+        <ButtonAdd />
     </div>
 </template>
 
 <script>
     import AddNewVehicle from './AddNewTrailer.vue'
+    import AuthenticationService from '../../services/AuthenticationService'
+    import Header from '../Header.vue'
+    import ButtonAdd from '../ButtonAdd.vue'
 
     export default {
         data() {
             return {
                 dialog: false,
                 landscape: false,
+                trailerList: [],
                 trailer: {
                     plate: '',
                     make: '',
@@ -116,10 +122,34 @@
             deleteTrailer() {
                 this.$store.dispatch('deleteTrailer', this.trailer)
                 this.dialog = false;
+            },
+            getTrailerToLocal(truck) {
+                this.trailerList.push(truck)
+                this.convertDate()
+            },
+            getTrailers() {
+                AuthenticationService.getTrailers()
+                    .then(response => {
+                        response.data.forEach(el => this.getTrailerToLocal(el))
+                    })
+                    .catch(err => {
+                        this.$router.push({name: 'Login'})
+                    })
+            },
+            convertDate() {
+                this.trailerList.forEach(el => el.date = el.date.substr(0, 10))
             }
         },
+        mounted() {
+            if (!(localStorage.getItem('token') && localStorage.getItem('isLogged'))) {
+                this.$router.push({name: 'Login'})
+            }
+            this.getTrailers()
+        },
         components: {
-            AddNewVehicle
+            AddNewVehicle,
+            Header,
+            ButtonAdd
         },
         computed: {
             trailers() {

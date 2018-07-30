@@ -1,5 +1,6 @@
 <template>
     <div>
+        <Header />
         <v-data-table
             :headers="headers"
             :items="employees"
@@ -77,18 +78,22 @@
                 </v-container>
                 <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn flat color="error" @click="deleteTruck">Delete</v-btn>
+                <v-btn flat color="error" @click="deleteEmployee">Delete</v-btn>
                 <v-btn flat color="primary" @click="dialog = false">Cancel</v-btn>
-                <v-btn flat @click="addTruck">Save</v-btn>
+                <v-btn flat @click="addEmployee">Save</v-btn>
                 </v-card-actions>
             </v-card>
             </v-dialog>
         <AddNewEmployee />
+        <ButtonAdd />
     </div>
 </template>
 
 <script>
     import AddNewEmployee from './AddNewEmployee.vue'
+    import AuthenticationService from '../../services/AuthenticationService'
+    import Header from '../Header.vue'
+    import ButtonAdd from '../ButtonAdd.vue'
 
     export default {
         data() {
@@ -104,6 +109,7 @@
                     card: false,
                     active: true,
                 },
+                employees: [],
                 headers: [
                     {
                         text: 'Name',
@@ -138,13 +144,30 @@
             deleteEmployee() {
                 this.$store.dispatch('deleteEmployee', this.employee)
                 this.dialog = false;
+            },
+            getEmployeeToLocal(emp) {
+                this.employees.push(emp)
+            },
+            getEmployees() {
+                AuthenticationService.getEmployees()
+                    .then(response => {
+                        response.data.forEach(el => this.getEmployeeToLocal(el))
+                    })
             }
         },
         components: {
-            AddNewEmployee
+            AddNewEmployee,
+            Header,
+            ButtonAdd
+        },
+        mounted() {
+            if (!(localStorage.getItem('token') && localStorage.getItem('isLogged'))) {
+                this.$router.push({name: 'Login'})
+            }
+            this.getEmployees()
         },
         computed: {
-            employees() {
+            employeesLocal() {
                 return this.$store.getters.employees
             }
         }

@@ -22,10 +22,12 @@
     import AuthenticationService from '../services/AuthenticationService'
 
   export default {
+    name: 'Login',
     data() {
         return {
             email: '',
-            password: ''
+            password: '',
+            jwt: ''
         }
     },
     methods: {
@@ -34,6 +36,10 @@
                email: this.email,
                password: this.password
            })
+           this.jwt = response.data.token
+           localStorage.setItem('token', this.jwt)
+           localStorage.setItem('isLogged', true)
+           console.log(localStorage.getItem('token') + " " + localStorage.getItem('isLogged'))
            this.$router.push({name: 'Home'})
         }
     }

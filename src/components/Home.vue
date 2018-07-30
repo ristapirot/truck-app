@@ -1,20 +1,32 @@
 <template>
-    <v-button @click="getTrucks">GET TRUCKS</v-button>
+  <div>
+    <Header></Header>
+    <h1>Trucks in log</h1>
+    <ButtonAdd />
+  </div>
+  
 </template>
 
 <script>
-  import Api from '../services/Api'
+  import AuthenticationService from '../services/AuthenticationService'
+  import Header from './Header.vue'
+  import ButtonAdd from './ButtonAdd.vue'
 
   export default {
     name: 'Home',
     data() {
-      
-    },
-    methods: {
-      async getTrucks() {
-        const result = await Api().get('/trucks')
-        console.log(result)
+      return {
+
       }
+    },
+    mounted() {
+      if (!(localStorage.getItem('token') && localStorage.getItem('isLogged'))) {
+        this.$router.push({name: 'Login'})
+      }
+    },
+    components: {
+      Header,
+      ButtonAdd
     }
   }
 </script>

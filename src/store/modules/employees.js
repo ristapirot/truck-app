@@ -1,5 +1,6 @@
 import employees from '../../data/employees'
 
+
 const state = {
     employees: []
 }
@@ -35,7 +36,7 @@ const mutations = {
 
 const actions = {
     initEmployees: ({commit}) => {
-        commit('SET_EMPLOYEES', employees)
+        commit('SET_EMPLOYEES', Auth.getEmployers())
     },
     addEmployee: ({commit}, employee) => {
         commit('ADD_EMPLOYEES', employee)

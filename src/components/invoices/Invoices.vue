@@ -1,32 +1,41 @@
 <template>
-    <div class="invoices">
-        <v-data-table
-            :headers="headers"
-            :items="invoices"
-            hide-actions
-            class="elevation-1"
-        >
-            <template slot="items" slot-scope="props">
-                <td>{{ props.item.number }}</td>
-                <td class="text-xs-right">{{ props.item.cmr }}</td>
-                <td class="text-xs-right">{{ props.item.price }}</td>
-                <td class="text-xs-right">{{ props.item.date }}</td>
-                <td class="text-xs-right">{{ props.item.fleet.start }}</td>
-                <td class="text-xs-right">{{ props.item.fleet.end }}</td>
-                <td class="text-xs-right">{{ props.item.fleet.truck.plate }}</td>
-                <td class="text-xs-right">{{ props.item.fleet.company }}</td>
-            </template>
-        </v-data-table>
-        <add-new-invoice></add-new-invoice>
+    <div>
+        <Header />
+        <div class="invoices">
+            <v-data-table
+                :headers="headers"
+                :items="invoices"
+                hide-actions
+                class="elevation-1"
+            >
+                <template slot="items" slot-scope="props">
+                    <td>{{ props.item.number }}</td>
+                    <td class="text-xs-right">{{ props.item.cmr }}</td>
+                    <td class="text-xs-right">{{ props.item.price }}</td>
+                    <td class="text-xs-right">{{ props.item.date }}</td>
+                    <td class="text-xs-right">{{ props.item.fleet.start }}</td>
+                    <td class="text-xs-right">{{ props.item.fleet.end }}</td>
+                    <td class="text-xs-right">{{ props.item.fleet.truck.plate }}</td>
+                    <td class="text-xs-right">{{ props.item.fleet.company }}</td>
+                </template>
+            </v-data-table>
+            <add-new-invoice></add-new-invoice>
+        </div>
+        <ButtonAdd />
     </div>
+    
 </template>
 
 <script>
     import AddNewInvoice from './AddNewInvoice.vue'
+    import AuthenticationService from '../../services/AuthenticationService'
+    import Header from '../Header.vue'
+    import ButtonAdd from '../ButtonAdd.vue'
 
     export default {
         data() {
             return {
+                invoices: [],
                 headers: [
                     {
                         text: 'Invoice No',
@@ -47,10 +56,37 @@
         components: {
             AddNewInvoice
         },
+        methods: {
+            getInvoiceToLocal(invoice) {
+                this.invoices.push(invoice)
+                this.convertDate()
+            }, 
+            getInvoices() {
+                AuthenticationService.getInvoices()
+                    .then(response => {
+                        response.data.forEach(el => this.getInvoiceToLocal(el))
+                    })
+            },
+            convertDate() {
+                this.invoices.forEach(el => {
+                    el.date = el.date.substr(0, 10)
+                })
+            }
+        },
+        mounted() {
+            if (!(localStorage.getItem('token') && localStorage.getItem('isLogged'))) {
+                this.$router.push({name: 'Login'})
+            }
+            this.getInvoices()
+        },
         computed: {
-            invoices() {
+            invoicesLocal() {
                 return this.$store.getters.invoices
             }
+        },
+        components: {
+            Header,
+            ButtonAdd
         }
     }
 </script>

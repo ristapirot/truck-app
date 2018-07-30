@@ -8,7 +8,7 @@ import Invoices from './components/invoices/Invoices.vue'
 
 export const routes = [
     { path: '/', component: Home, name: 'Home' },
-    { path: '/login', component: Login },
+    { path: '/login', component: Login, name: 'Login' },
     { path: '/trucks', component: Trucks},
     { path: '/trailers', component: Trailers },
     { path: '/employees', component: Employees },
