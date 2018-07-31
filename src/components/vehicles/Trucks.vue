@@ -31,6 +31,7 @@
                         prepend-icon="business"
                         placeholder="Licence plate"
                         v-model="truck.plate"
+                        :disabled="true"
                     ></v-text-field>
                     </v-flex>
                     <v-flex xs6>
@@ -63,7 +64,7 @@
                 <v-spacer></v-spacer>
                 <v-btn flat color="error" @click="deleteTruck">Delete</v-btn>
                 <v-btn flat color="primary" @click="dialog = false">Cancel</v-btn>
-                <v-btn flat @click="addTruck">Save</v-btn>
+                <v-btn flat @click="updateTruck">Save</v-btn>
                 </v-card-actions>
             </v-card>
             </v-dialog>
@@ -74,7 +75,6 @@
 
 <script>
     import AddNewVehicle from './AddNewTruck.vue'
-    import AuthenticationService from '../../services/AuthenticationService'
     import Header from '../Header.vue'
     import ButtonAdd from '../ButtonAdd.vue'
 
@@ -83,6 +83,7 @@
             return {
                 dialog: false,
                 landscape: false,
+                truckId: '',
                 truck: {
                     plate: '',
                     make: '',
@@ -107,37 +108,25 @@
         },
         methods: {
             selectTruck(truck) {
+                this.truckId = truck._id
                 this.truck.plate = truck.plate
                 this.truck.make = truck.make
                 this.truck.model = truck.model
                 this.truck.vin = truck.vin
                 this.truck.date = truck.date
-                console.log(this.truck)
                 this.dialog = !this.dialog                
             },
             addTruck() {
                 this.$store.dispatch('addTruck', this.truck)
                 this.dialog = false;
             },
+            updateTruck() {
+                this.$store.dispatch('updateTruck', this.truck)
+                this.dialog = false;
+            },
             deleteTruck() {
                 this.$store.dispatch('deleteTruck', this.truck)
                 this.dialog = false;
-            },
-            getTruckToLocal(truck) {
-                this.truckList.push(truck)
-                this.convertDate()
-            },
-            getTrucks() {
-                AuthenticationService.getTrucks()
-                    .then(response => {
-                        response.data.forEach(el => this.getTruckToLocal(el))
-                    })
-                    .catch(err => {
-                        this.$router.push({name: 'Login'})
-                    })
-            },
-            convertDate() {
-                this.truckList.forEach(el => el.date = el.date.substr(0, 10))
             }
         },
         components: {
@@ -149,7 +138,6 @@
             if (!(localStorage.getItem('token') && localStorage.getItem('isLogged'))) {
                 this.$router.push({name: 'Login'})
             }
-            this.getTrucks()
         },
         computed: {
             trucks() {

@@ -51,6 +51,7 @@
     export default {
         data() {
             return {
+                valid: true,
                 employee: {
                     name: '',
                     surname: '',

@@ -160,3 +160,10 @@ import Home from './Home.vue'
   }
 </script>
 
+<style scoped>
+  a {
+    text-decoration: none;
+    color: #fff
+  }
+</style>
+

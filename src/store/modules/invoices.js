@@ -1,7 +1,13 @@
-import invoices from '../../data/invoices'
+import Api from '../../services/AuthenticationService'
 
 const state = {
     invoices: []
+}
+
+const getters = {
+    invoices: state => {
+        return state.invoices
+    }
 }
 
 const mutations = {
@@ -31,6 +37,13 @@ const mutations = {
 
 const actions = {
     initInvoices: ({commit}) => {
+        let invoices = []
+        Api.getInvoices().then(response => {
+            response.data.forEach(el => {
+                el.date = el.date.substr(0, 10)
+                invoices.push(el)
+            })
+        })
         commit('SET_INVOICES', invoices)
     },
     addInvoice: ({commit}, invoice) => {
@@ -38,15 +51,9 @@ const actions = {
     }
 }
 
-const getters = {
-    invoices: state => {
-        return state.invoices
-    }
-}
-
 export default {
     state,
+    getters,
     mutations,
-    actions,
-    getters
+    actions
 }

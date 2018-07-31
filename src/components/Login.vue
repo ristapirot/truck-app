@@ -9,6 +9,7 @@
     ></v-text-field>
     <v-text-field
       v-model="password"
+      type="password"
       label="Password"
       data-vv-name="name"
       required

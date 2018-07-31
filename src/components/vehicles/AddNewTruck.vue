@@ -41,6 +41,7 @@
         data() {
             return {
                 landscape: true,
+                valid: true,
                 truck: {
                     plate: '',
                     make: '',

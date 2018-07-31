@@ -39,6 +39,7 @@
     export default {
         data() {
             return {
+                valid: true,
                 landscape: true,
                 trailer: {
                     plate: '',

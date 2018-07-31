@@ -80,7 +80,7 @@
                 <v-spacer></v-spacer>
                 <v-btn flat color="error" @click="deleteEmployee">Delete</v-btn>
                 <v-btn flat color="primary" @click="dialog = false">Cancel</v-btn>
-                <v-btn flat @click="addEmployee">Save</v-btn>
+                <v-btn flat @click="updateEmployee">Save</v-btn>
                 </v-card-actions>
             </v-card>
             </v-dialog>
@@ -91,7 +91,6 @@
 
 <script>
     import AddNewEmployee from './AddNewEmployee.vue'
-    import AuthenticationService from '../../services/AuthenticationService'
     import Header from '../Header.vue'
     import ButtonAdd from '../ButtonAdd.vue'
 
@@ -109,7 +108,6 @@
                     card: false,
                     active: true,
                 },
-                employees: [],
                 headers: [
                     {
                         text: 'Name',
@@ -141,18 +139,13 @@
                 this.$store.dispatch('addEmployee', this.employee)
                 this.dialog = false;
             },
+            updateEmployee() {
+                this.$store.dispatch('updateEmployee', this.employee)
+                this.dialog = false;
+            },
             deleteEmployee() {
                 this.$store.dispatch('deleteEmployee', this.employee)
                 this.dialog = false;
-            },
-            getEmployeeToLocal(emp) {
-                this.employees.push(emp)
-            },
-            getEmployees() {
-                AuthenticationService.getEmployees()
-                    .then(response => {
-                        response.data.forEach(el => this.getEmployeeToLocal(el))
-                    })
             }
         },
         components: {
@@ -164,10 +157,9 @@
             if (!(localStorage.getItem('token') && localStorage.getItem('isLogged'))) {
                 this.$router.push({name: 'Login'})
             }
-            this.getEmployees()
         },
         computed: {
-            employeesLocal() {
+            employees() {
                 return this.$store.getters.employees
             }
         }

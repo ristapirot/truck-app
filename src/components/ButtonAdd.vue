@@ -31,15 +31,9 @@
                     </v-avatar>
                     <v-select
                     :items="getTrucks.map(truck => {
-                        return {text: truck.plate, value: {
-                            plate: truck.plate,
-                            make: truck.make,
-                            model: truck.model,
-                            vin: truck.vin,
-                            date: truck.date
-                        }}
+                        return {text: truck.plate, value: truck._id}
                         })"
-                    v-model="fleet.truck"
+                    v-model="fleetAdd.truck"
                     label="Trucks"
                     required
                     ></v-select>
@@ -49,21 +43,21 @@
                 <v-text-field
                     prepend-icon="business"
                     placeholder="Company"
-                    v-model="fleet.company"
+                    v-model="fleetAdd.company"
                 ></v-text-field>
                 </v-flex>
                 <v-flex xs6>
                 <v-text-field
                     prepend-icon="location_on"
                     placeholder="Start Location"
-                    v-model="fleet.start"
+                    v-model="fleetAdd.start"
                 ></v-text-field>
                 </v-flex>
                 <v-flex xs6>
                 <v-text-field
                     prepend-icon="location_off"
                     placeholder="End Location"
-                    v-model="fleet.end"
+                    v-model="fleetAdd.end"
                 ></v-text-field>
                 </v-flex>
                 <v-flex xs5>
@@ -72,7 +66,7 @@
                     :close-on-content-click="false"
                     v-model="date1"
                     :nudge-right="40"
-                    :return-value.sync="fleet.startDate"
+                    :return-value.sync="fleetAdd.startDate"
                     lazy
                     transition="scale-transition"
                     offset-y
@@ -81,12 +75,12 @@
                 >
                     <v-text-field
                     slot="activator"
-                    v-model="fleet.startDate"
+                    v-model="fleetAdd.startDate"
                     label="Start Date"
                     prepend-icon="event"
                     readonly
                     ></v-text-field>
-                    <v-date-picker v-model="fleet.startDate" @input="$refs.date1.save(fleet.startDate)"></v-date-picker>
+                    <v-date-picker v-model="fleetAdd.startDate" @input="$refs.date1.save(fleetAdd.startDate)"></v-date-picker>
 
                 </v-menu>
                 </v-flex>
@@ -96,7 +90,7 @@
                     :close-on-content-click="false"
                     v-model="date2"
                     :nudge-right="40"
-                    :return-value.sync="fleet.endDate"
+                    :return-value.sync="fleetAdd.endDate"
                     lazy
                     transition="scale-transition"
                     offset-y
@@ -106,12 +100,12 @@
                 >
                     <v-text-field
                     slot="activator"
-                    v-model="fleet.endDate"
+                    v-model="fleetAdd.endDate"
                     label="End Date"
                     prepend-icon="event"
                     readonly
                     ></v-text-field>
-                    <v-date-picker v-model="fleet.endDate" @input="$refs.date2.save(fleet.endDate)"></v-date-picker>
+                    <v-date-picker v-model="fleetAdd.endDate" @input="$refs.date2.save(fleetAdd.endDate)"></v-date-picker>
                     
                 </v-menu>
                 </v-flex>
@@ -131,17 +125,10 @@
                     </v-avatar>
                     <v-select
                     :items="getDrivers.filter(driv => driv.workplace == 'Driver').map(driv => {
-                        return {text: driv.name + ' ' + driv.surname, value: {
-                        name: driv.name,
-                        surname: driv.surname,
-                        personId: driv.personId,
-                        telephone: driv.telephone,
-                        card: driv.card,
-                        active: driv.active
-                        }}  
+                        return {text: driv.name + ' ' + driv.surname, value: driv._id}  
                     })"
                     label="Select driver"
-                    v-model="fleet.driver"
+                    v-model="fleetAdd.driver"
                     required
                     ></v-select>
                 </v-layout>
@@ -166,7 +153,7 @@ export default {
             isOngoing: false,
             date1: false,
             date2: false,
-            fleet: {
+            fleetAdd: {
                 start: '',
                 end: '',
                 truck: {},
@@ -179,21 +166,22 @@ export default {
     },
     methods: {
         clearFleet() {
-        this.fleet.start = '',
-        this.fleet.end = '',
-        this.fleet.truck = {},
-        this.fleet.driver = {},
-        this.fleet.startDate = null,
-        this.fleet.endDate = '',
-        this.fleet.company = ''
+        this.fleetAdd.start = '',
+        this.fleetAdd.end = '',
+        this.fleetAdd.truck = null,
+        this.fleetAdd.driver = null,
+        this.fleetAdd.startDate = null,
+        this.fleetAdd.endDate = '',
+        this.fleetAdd.company = ''
       },
       addFleet() {
         if (this.isOngoing) {
-          this.fleet.endDate = 'Ongoing'
+          this.fleetAdd.endDate = 'Ongoing'
         }
-        this.$store.dispatch('addFleets', this.fleet)
+        console.log(this.fleetAdd)
+        this.$store.dispatch('addFleets', this.fleetAdd)
         this.dialog = false
-        this.clearFleet()
+        //this.clearFleet()
       }
     },
     computed: {

@@ -3,7 +3,7 @@
         <Header />
         <v-data-table
             :headers="headers"
-            :items="trailerList"
+            :items="trailers"
             hide-actions
             class="elevation-1"
         >
@@ -63,7 +63,7 @@
                 <v-spacer></v-spacer>
                 <v-btn flat color="error" @click="deleteTrailer">Delete</v-btn>
                 <v-btn flat color="primary" @click="dialog = false">Cancel</v-btn>
-                <v-btn flat @click="addTrailer">Save</v-btn>
+                <v-btn flat @click="updateTrailer">Save</v-btn>
                 </v-card-actions>
             </v-card>
             </v-dialog>
@@ -74,7 +74,6 @@
 
 <script>
     import AddNewVehicle from './AddNewTrailer.vue'
-    import AuthenticationService from '../../services/AuthenticationService'
     import Header from '../Header.vue'
     import ButtonAdd from '../ButtonAdd.vue'
 
@@ -83,7 +82,7 @@
             return {
                 dialog: false,
                 landscape: false,
-                trailerList: [],
+                trailerId: '',
                 trailer: {
                     plate: '',
                     make: '',
@@ -107,6 +106,7 @@
         },
         methods: {
             selectTrailer(trailer) {
+                this.trailerId = trailer._id
                 this.trailer.plate = trailer.plate
                 this.trailer.make = trailer.make
                 this.trailer.model = trailer.model
@@ -119,32 +119,19 @@
                 this.$store.dispatch('addTrailer', this.trailer)
                 this.dialog = false;
             },
+            updateTrailer() {
+                this.$store.dispatch('updateTrailer', this.trailer)
+                this.dialog = false;
+            },
             deleteTrailer() {
                 this.$store.dispatch('deleteTrailer', this.trailer)
                 this.dialog = false;
-            },
-            getTrailerToLocal(truck) {
-                this.trailerList.push(truck)
-                this.convertDate()
-            },
-            getTrailers() {
-                AuthenticationService.getTrailers()
-                    .then(response => {
-                        response.data.forEach(el => this.getTrailerToLocal(el))
-                    })
-                    .catch(err => {
-                        this.$router.push({name: 'Login'})
-                    })
-            },
-            convertDate() {
-                this.trailerList.forEach(el => el.date = el.date.substr(0, 10))
             }
         },
         mounted() {
             if (!(localStorage.getItem('token') && localStorage.getItem('isLogged'))) {
                 this.$router.push({name: 'Login'})
             }
-            this.getTrailers()
         },
         components: {
             AddNewVehicle,
