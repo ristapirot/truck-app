@@ -117,5 +117,20 @@ export default {
               headers: {"Authorization": 'Bearer ' + localStorage.getItem("token")}
             }
           )
-    }
+    },
+    addInvoices(credentials) {
+      return Api().post('http://localhost:3000/invoices', credentials, {
+        headers: { "Authorization": 'Bearer ' + localStorage.getItem('token') }
+      })
+    },
+    updateInvoices(credentials, invoiceId) {
+        return Api().put('http://localhost:3000/invoices/' + invoiceId, credentials, {
+          headers: { "Authorization": 'Bearer ' + localStorage.getItem('token') }
+        })
+    },
+    deleteInvoices(invoiceId) {
+        return Api().delete('http://localhost:3000/invoices/' + invoiceId, {
+          headers: { "Authorization": 'Bearer ' + localStorage.getItem('token') }
+        })
+    },
 }

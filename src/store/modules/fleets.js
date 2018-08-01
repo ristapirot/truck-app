@@ -29,7 +29,7 @@ const mutations = {
         })
     },
     'UPDATE_FLEETS' (state, { start, end, truck, driver, startDate, endDate, company }) {
-        const record = state.fleets.find(element => element.start == start && element.end == end && element.truck == truck && element && element.startDate == startDate)._id
+        const fleetId = state.fleets.find(element => element.start == start && element.end == end && element.truck == truck && element && element.startDate == startDate)._id
         Api.updateFleets({ start, end, truck, driver, startDate, endDate, company }, fleetId).then(response => {
             console.log(response.data)
         })

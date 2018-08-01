@@ -274,7 +274,8 @@
                 this.fleet.truck = fleet.truck
                 this.fleet.driver = fleet.driver
                 this.fleet.startDate = fleet.startDate
-                this.fleet.endDate = fleet.endDate
+                this.fleet.endDate = fleet.endDate == 'Ongoing' ? fleet.endDate = '' : fleet.endDate
+                this.isOngoing = fleet.endDate == 'Ongoing'? false : true
                 this.fleet.company = fleet.company
                 this.dialog1 = !this.dialog1              
             },

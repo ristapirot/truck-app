@@ -46,16 +46,9 @@
                 <v-select
                 :items="fleets.map(fl => {
                     if (checkFleet(fl) == undefined) {
-                        return {text: fl.start + ' - ' + fl.end + ' (' + fl.truck.plate + ')' + ' (' + fl.startDate + ' )' , value: {
-                            start: fl.start,
-                            end: fl.end,
-                            truck: fl.truck,
-                            driver: fl.driver,
-                            startDate: fl.startDate,
-                            endDate: fl.endDate,
-                            company: fl.company
-                        }}
+                        return {text: fl.start + ' - ' + fl.end + ' (' + fl.truck.plate + ')' + ' (' + fl.startDate + ' )' , value: fl._id}
                     }
+                    
                 }).filter(element =>  element != undefined)"
                 box
                 label="Choose fleet"
@@ -93,15 +86,18 @@
                 this.invoice.cmr = ''
                 this.invoice.price = ''
                 this.invoice.date = ''
-                this.invoice.fleet = null
+                this.invoice.fleet = {}
             },
             addInvoice() {
                 this.$store.dispatch('addInvoice', this.invoice)
                 this.clear()
             },
+            logFleets() {
+                console.log(this.invoices.map(element => element.fleet))
+            },
             checkFleet(fleet) {
                 //console.log(this.invoices.map(element => element.fleet).find(element => element.start == fleet.start && element.end == fleet.end && element.startDate == fleet.startDate && element.endDate == fleet.endDate))
-                return this.invoices.map(element => element.fleet).find(element => element.start == fleet.start && element.end == fleet.end && element.startDate == fleet.startDate && element.endDate == fleet.endDate)
+                return this.invoices.map(el => el.fleet).find(element => element._id == fleet._id)
             }
         },
         computed: {
@@ -118,7 +114,7 @@
 
 <style>
     .formInvoice {
-        margin: 4% auto;
+        margin: 4%;
         width: 40%;
     }
 
